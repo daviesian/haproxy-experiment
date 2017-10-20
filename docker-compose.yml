@@ -1,7 +1,8 @@
 version: "3"
 services:
   haproxy:
-    image: haproxy:1.7.9
+    build:
+      context: ./haproxy
     volumes:
       - "./haproxy:/usr/local/etc/haproxy:ro"
     ports:
@@ -10,7 +11,6 @@ services:
   app1:
     build:
       context: ./app
-      dockerfile: Dockerfile-app
     volumes:
       - "./app:/app:ro"
     working_dir: /app
@@ -21,7 +21,6 @@ services:
   app2:
     build:
       context: ./app
-      dockerfile: Dockerfile-app
     volumes:
       - "./app:/app:ro"
     working_dir: /app
