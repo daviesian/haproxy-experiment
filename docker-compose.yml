@@ -1,14 +1,19 @@
-version: "3"
+version: "2"
 services:
   haproxy:
     build:
       context: ./haproxy
     volumes:
       - "./haproxy:/usr/local/etc/haproxy:ro"
+    networks:
+      staging:
+        ipv4_address: 10.0.2.2
+      live:
+        ipv4_address: 10.0.1.2
     ports:
       - "5000:5000"
 
-  app1:
+  app-live:
     build:
       context: ./app
     volumes:
@@ -16,14 +21,26 @@ services:
     working_dir: /app
     command: ["server.py"]
     environment:
-      SERVER_ID: SERVER_1
+      PYTHONUNBUFFERED: 1
+    networks: 
+      - live
 
-  app2:
+  app-staging:
     build:
       context: ./app
     volumes:
       - "./app:/app:ro"
     working_dir: /app
     command: ["server.py"]
-    environment:
-      SERVER_ID: SERVER_2
+    networks: 
+      - staging
+
+
+# docker network create live    --subnet 10.0.1.0/24 --ip-range 10.0.1.8/29 --gateway 10.0.1.1
+# docker network create staging --subnet 10.0.2.0/24 --ip-range 10.0.2.8/31 --gateway 10.0.2.1
+
+networks:
+  live:
+    external: true
+  staging:
+    external: true
