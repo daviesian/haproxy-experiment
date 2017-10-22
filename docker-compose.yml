@@ -11,29 +11,29 @@ services:
       live:
         ipv4_address: 10.0.1.2
     ports:
-      - "5000:5000"
+      - "3000:3000"
 
-  app-live:
-    build:
-      context: ./app
-    volumes:
-      - "./app:/app:ro"
-    working_dir: /app
-    command: ["server.py"]
-    environment:
-      PYTHONUNBUFFERED: 1
-    networks: 
-      - live
-
-  app-staging:
-    build:
-      context: ./app
-    volumes:
-      - "./app:/app:ro"
-    working_dir: /app
-    command: ["server.py"]
-    networks: 
-      - staging
+  #app-live:
+  #  build:
+  #    context: ./app
+  #  volumes:
+  #    - "./app:/app:ro"
+  #  working_dir: /app
+  #  command: ["server.py"]
+  #  environment:
+  #    PYTHONUNBUFFERED: 1
+  #  networks: 
+  #    - live
+#
+  #app-staging:
+  #  build:
+  #    context: ./app
+  #  volumes:
+  #    - "./app:/app:ro"
+  #  working_dir: /app
+  #  command: ["server.py"]
+  #  networks: 
+  #    - staging
 
 
 # docker network create live    --subnet 10.0.1.0/24 --ip-range 10.0.1.8/29 --gateway 10.0.1.1
@@ -44,3 +44,5 @@ networks:
     external: true
   staging:
     external: true
+
+# docker-compose exec haproxy watch -n 1 'echo "show table local" | socat unix:/var/run/haproxy.sock -'
